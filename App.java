@@ -393,8 +393,240 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return xmls;
 
     }
+        public static String covertXML_to_JSON(String n) {
+        if(!consistinsy(n))
+         return "In-valid XML file";
+        String str = xmls(n);
+        xml_tree t = new xml_tree();
+        node no = t.convert_to_tree(str);
+        StringBuilder r = new StringBuilder();
+        r.append("{");
+        r.append("\n");
+        Stack<String> st = new Stack<String>();
+        st.push(" ");
+
+        XML_to_JSON(no, st, r);
+        r.append("}");
+        r.append("\n");
+        return r.toString();
+
+    }
+
+    public static void XML_to_JSON(node n, Stack st, StringBuilder k) {
+        if (isArray(n)) {
+            k.append(st.peek() + " " + "\"" + n.get_node_name() + "\":");
+        } else {
+            k.append(st.peek() + "\"" + n.get_node_name() + "\":");
+        }
+        if (!(n.get_value() == null || n.get_value() == "")) {
+            if (isNumeric(n.get_value()) == -1) {
+
+                k.append(" \"" + n.get_value() + "\",");
+                k.append("\n");
+            } else {
+                k.append(isNumeric(n.get_value()) + ",");
+                k.append("\n");
+            }
+        }
+        if (isArray(n)) {
+            k.append("[");
+            k.append("\n");
+            k.append(st.peek() + " {");
+            k.append("\n");
+
+        } else if (n.get_children().size() > 0) {
+            k.append("{");
+            k.append("\n");
+        }
+
+        st.push(st.peek() + " ");
+        for (int i = 0; i < n.get_children().size(); i++) {
+
+            XML_to_JSON(n.get_children().get(i), st, k);
+
+        }
+        if (isArray(n)) {
+            k.append(st.peek() + " ]");
+            k.append("\n");
+            k.append(st.peek() + "}");
+            k.append("\n");
+        } else if (n.get_children().size() > 0) {
+            k.append(st.peek() + "}");
+        }
+        st.pop();
+
+    }
+
+    public static boolean isArray(node n) {
+        boolean v = false;
+        for (int i = 0; i < n.get_children().size() - 1; i++) {
+            String s = n.get_children().get(i).get_value();
+            if (!(s == null || s == "")) {
+                v = true;
+                break;
+            }
+        }
+
+        return v;
+    }
+
+    public static int isNumeric(String str) {
+        int n = -1;
+        if (str == null) {
+            return -1;
+        }
+        try {
+            n = Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+        return n;
+    }
     public static void main(String[] args) {
         launch();
     }
 }
+}
+class node {
+
+    String node_name;
+    String value;
+    ArrayList<node> children = new ArrayList<node>();
+
+    public node(String n) {
+        node_name = n;
+    }
+
+    public node(String n, String v) {
+        node_name = n;
+        value = v;
+    }
+
+    public String get_node_name() {
+        return node_name;
+    }
+
+    public String get_value() {
+        return value;
+    }
+
+    public ArrayList<node> get_children() {
+        ArrayList<node> temp = new ArrayList<node>();
+
+        for (int i = 0; i < children.size(); i++) {
+            temp.add(children.get(i));
+        }
+        return temp;
+    }
+
+    public void set_node_name(String n) {
+        node_name = n;
+    }
+
+    public void set_value(String v) {
+        value = v;
+    }
+
+    public void add_child(node n) {
+        children.add(n);
+    }
+
+}
+
+class xml_tree {
+
+    node root;
+
+    public node get_root() {
+        return root;
+    }
+
+    public void set_root(node n) {
+        root = n;
+    }
+
+    public node convert_to_tree(String s) {
+        int i;
+        for (i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ' ' || s.charAt(i) == '\n' || s.charAt(i) == '\r') {
+                continue;
+            }
+            if (s.charAt(i) == '<' && s.charAt(i + 1) != '/') {
+                //opening tag
+                String t = parseTag(s.substring(i + 1));
+                set_root(new node(t));
+                i = s.indexOf('>', i) + 1;
+                break;
+
+            }
+        }
+
+        for (int j = i; j < s.length(); j++) {
+            if (s.charAt(j) == ' ' || s.charAt(j) == '\n' || s.charAt(j) == '\r') {
+                continue;
+            }
+            if (s.charAt(j) == '<' && s.charAt(j + 1) != '/') {
+                //opening tag
+                String t = parseTag(s.substring(j + 1));
+                node p = new node(t);
+                get_root().add_child(p);
+                insertItschildren(p, s.substring(j + t.length() + 1));
+                break;
+            }
+        }
+
+        return get_root();
+    }
+
+    public void insertItschildren(node parent, String s) {
+
+        Stack<node> st = new Stack<node>();
+        st.push(get_root());
+        st.push(parent);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ' ' || s.charAt(i) == '\n' || s.charAt(i) == '\r') {
+                continue;
+            }
+            if (s.charAt(i) == '<') {
+                if (s.charAt(i + 1) == '/') {
+
+                    if (st.peek().get_node_name().equals(parseTag(s.substring(i + 2)))) {
+                        st.pop();
+                        continue;
+
+                    }
+                } else {
+                    String t = parseTag(s.substring(i + 1));
+
+                    int k = i + t.length() + 1 + 1;
+                    String tv = "";
+
+                    while (s.charAt(k) != '<') {
+                        if (s.charAt(k) == '\n' || s.charAt(k) == '\r' || s.charAt(k) == ' ') {
+                            k++;
+                            continue;
+                        }
+                        tv += s.charAt(k++);
+
+                    }
+
+                    node n = new node(t, tv);
+                    if (st.peek().get_value() == null || st.peek().get_value() == "") {
+                        parent = st.peek();
+                    }
+                    parent.add_child(n);
+                    st.push(n);
+                    i = k - 1;
+                }
+            }
+
+        }
+
+    }
+
+    public String parseTag(String s) {
+        String t = s.substring(0, s.indexOf('>', 0));
+        return t;
+    }
+
 }
