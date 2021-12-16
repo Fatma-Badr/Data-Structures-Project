@@ -32,7 +32,7 @@ public class App extends Application  {
 String str;
 
     public void start(Stage primaryStage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         StackPane layout = new StackPane();
 
 
@@ -393,4 +393,8 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return xmls;
 
     }
+    public static void main(String[] args) {
+        launch();
+    }
+}
 }
