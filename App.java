@@ -136,21 +136,47 @@ String str;
         ));
         primaryStage.show();
     }
-    public  void consistency_display(boolean s) {
+//     public  void consistency_display(boolean s) {
+//         Stage window = new Stage();
+//         window.initModality(Modality.APPLICATION_MODAL);
+//         BorderPane layout = new BorderPane();
+//         window.setTitle("Consistency");
+//         Text t = new Text();
+//         if(s == true){
+//             t.setText("Consistent");
+//         }
+//         else{
+//             t.setText("InConsistent");
+//         }
+//         layout.setCenter(t);
+
+//         Scene scene = new Scene(layout, 400, 400);
+//         window.setScene(scene);
+//         window.showAndWait();
+
+//     }
+    public  void consistency_display(String s) {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         BorderPane layout = new BorderPane();
-        window.setTitle("Consistency");
-        Text t = new Text();
-        if(s == true){
-            t.setText("Consistent");
+        Scene scene;
+        if(s.equals("Consistent")){
+            window.setTitle("Consistency");
+            Text t = new Text(s);
+//            t.setText(s);
+            layout.setCenter(t);
+            scene = new Scene(layout, 400, 400);
+
         }
         else{
-            t.setText("InConsistent");
-        }
-        layout.setCenter(t);
+            window.setTitle("InConsistent");
+            ScrollPane layout2 = new ScrollPane();
+            Text t = new Text(s);
+            layout2.setContent(t);
+            scene = new Scene(layout2, 400, 400);
 
-        Scene scene = new Scene(layout, 400, 400);
+        }
+
         window.setScene(scene);
         window.showAndWait();
 
