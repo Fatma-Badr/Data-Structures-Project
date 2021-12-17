@@ -381,6 +381,8 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
     }
     
     public static String compress(String path) {
+        if(!detection(path))
+            return "In-valid XML file";
         String s = "";
         try {
             File myObj = new File(path);
