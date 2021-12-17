@@ -268,7 +268,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
     }
 
     public static String formating(String path) {
-        if(!consistinsy(path))
+        if(!detection(path))
             return "In-valid XML file";
         xml_tree t = new xml_tree();
         //System.out.println(compress(path));
@@ -420,7 +420,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
 
     }
         public static String covertXML_to_JSON(String n) {
-        if(!consistinsy(n))
+        if(!detection(n))
          return "In-valid XML file";
         String str = xmls(n);
         xml_tree t = new xml_tree();
