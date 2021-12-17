@@ -486,7 +486,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         launch();
     }
 }
-}
+
 class node {
 
     String node_name;
