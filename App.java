@@ -60,7 +60,8 @@ String str;
             public void handle(MouseEvent event) {
 
                 try {
-                    consistency_display(consistinsy(locationTextField.getText()));
+                    consistency_display(consistensy(locationTextField.getText()));
+                    
 
                     } catch (Exception er1) {
                     er1.printStackTrace();
