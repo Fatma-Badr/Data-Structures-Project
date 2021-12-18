@@ -322,7 +322,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
             e.printStackTrace();
         }
     }
-        static boolean consistinsy(String path) {
+        static boolean detection(String path) {
         Stack<String> stk = new Stack<>();
         String txt = "";
         try {
@@ -380,6 +380,13 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return true;
     }
     
+        static String consistensy(String path) {
+        if (detection(path)) {
+            return "Consistent";
+        } else {
+            return "inconsistent" + "\nThe correction is\n" + correct(path);
+        }
+    }
     public static String compress(String path) {
         if(!detection(path))
             return "In-valid XML file";
