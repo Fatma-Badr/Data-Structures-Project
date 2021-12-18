@@ -428,7 +428,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return xmls;
 
     }
-        public static String correct(String p) {
+     public static String correct(String p) {
         String s = xmls(p);
 
         Stack<String> st = new Stack<String>();
@@ -454,16 +454,14 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
                                     int w = s.indexOf(g, 0);
                                     s = s.substring(0, w) + '<' + t + '>' + s.substring(w);
                                     o = true;
-                                    i = s.substring(0, y).length() + 1 + t.length();
-                                    st.push(t);
-                                    in.push(s.substring(0, w).length());
+                                    i=i+2+t.length();
+
                                 } else {
                                     int m = y + parseTag(s.substring(y + 1)).length() + 1;
                                     s = s.substring(0, m + 1) + '<' + t + '>' + s.substring(m + 1);
                                     o = true;
-                                    i = s.substring(0, m + 1).length() + 1 + t.length();
-                                    st.push(t);
-                                    in.push(s.substring(0, m + 1).length());
+                                    i=i+2+t.length();
+
                                 }
 
                             }
