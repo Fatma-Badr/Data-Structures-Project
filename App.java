@@ -428,6 +428,86 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return xmls;
 
     }
+        public static String correct(String p) {
+        String s = xmls(p);
+
+        Stack<String> st = new Stack<String>();
+        Stack<Integer> in = new Stack<Integer>();
+        ArrayList<String> q = new ArrayList<String>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '<') {
+
+                if (s.charAt(i + 1) != '/') {
+                    String t = parseTag(s.substring(i + 1));
+                    st.push(t);
+                    q.add(t);
+                    in.push(i);
+                } else {
+                    String t = parseTag(s.substring(i + 2));
+                    // missing opening tag
+                    if (st.empty() || !(st.peek().equals(t))) {
+                        boolean o = false;
+                        for (int y = i - 1; y > 0; y--) {
+                            if (s.charAt(y) == '<') {
+                                if (s.charAt(y + 1) == '/') {
+                                    String g = '<' + parseTag(s.substring(y + 2)) + '>';
+                                    int w = s.indexOf(g, 0);
+                                    s = s.substring(0, w) + '<' + t + '>' + s.substring(w);
+                                    o = true;
+                                    i = s.substring(0, y).length() + 1 + t.length();
+                                    st.push(t);
+                                    in.push(s.substring(0, w).length());
+                                } else {
+                                    int m = y + parseTag(s.substring(y + 1)).length() + 1;
+                                    s = s.substring(0, m + 1) + '<' + t + '>' + s.substring(m + 1);
+                                    o = true;
+                                    i = s.substring(0, m + 1).length() + 1 + t.length();
+                                    st.push(t);
+                                    in.push(s.substring(0, m + 1).length());
+                                }
+
+                            }
+                            if (o) {
+                                break;
+                            }
+                        }
+
+                    } else {
+                        st.pop();
+                        in.pop();
+                    }
+                }
+            }
+        }
+        if (!st.empty()) {
+            while (!st.empty()) {
+                String f = st.peek();
+                int a = q.indexOf(f) + 1;
+                String d = q.get(a);
+                String e = "</" + d + '>';
+                int x = s.indexOf(e, in.peek());
+                int z = x + e.length();
+                s = s.substring(0, z + 1) + "</" + f + '>' + s.substring(z + 1);
+                st.pop();
+                in.pop();
+            }
+        }
+        return s;
+    }
+
+    static String consistensy(String path) {
+        if (detection(path)) {
+            return "Consistent";
+        } else {
+            return "inconsistent" + "\nThe correction is\n" + correct(path);
+        }
+    }
+
+    public static String parseTag(String s) {
+        String t = s.substring(0, s.indexOf('>', 0));
+
+        return t;
+    }
         public static String covertXML_to_JSON(String n) {
         if(!detection(n))
          return "In-valid XML file";
