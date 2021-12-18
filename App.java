@@ -27,7 +27,7 @@ public class App extends Application  {
     Button json = new Button("Json");
     Button compress = new Button("Compress");
 
-    TextField locationTextField = new TextField();
+    TextField locationTextField;
 
 String str;
 
@@ -39,6 +39,8 @@ String str;
         VBox vBox = new VBox();
         vBox.setSpacing(6);
         locationTextField = new TextField();
+        locationTextField.setPromptText("XML path");
+        locationTextField.setFocusTraversable(false);
         vBox.getChildren().add(locationTextField);
 
         vBox.getChildren().add(xML_consistency);
@@ -493,13 +495,13 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         return s;
     }
 
-    static String consistensy(String path) {
-        if (detection(path)) {
-            return "Consistent";
-        } else {
-            return "inconsistent" + "\nThe correction is\n" + correct(path);
-        }
-    }
+//     static String consistensy(String path) {
+//         if (detection(path)) {
+//             return "Consistent";
+//         } else {
+//             return "inconsistent" + "\nThe correction is\n" + correct(path);
+//         }
+//     }
 
     public static String parseTag(String s) {
         String t = s.substring(0, s.indexOf('>', 0));
