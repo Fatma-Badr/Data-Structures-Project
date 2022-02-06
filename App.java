@@ -654,6 +654,25 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         }
         return n;
     }
+     private static void  writeDotSourceToFile(String str) throws java.io.IOException
+     {
+         File temp;
+         try {
+             temp = File.createTempFile("dorrr",".dot", new File("/Users/ayahassan/Desktop/temp2"));
+             FileWriter fout = new FileWriter(temp);
+             fout.write(str);
+             BufferedWriter br=new BufferedWriter(new FileWriter("dotsource.dot"));
+             br.write(str);
+             br.flush();
+             br.close();
+             fout.close();
+         }
+         catch (Exception e) {
+             System.err.println("Error: I/O error while writing the dot source to temp file!");
+           //  return null;
+         }
+         //return temp;
+     }
     public static void main(String[] args) {
         launch();
     }
