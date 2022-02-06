@@ -26,6 +26,7 @@ public class App extends Application  {
     Button formatting_XML = new Button("Formatting");
     Button json = new Button("Json");
     Button compress = new Button("Compress");
+    Button graph = new Button("Graph");
 
     TextField locationTextField;
 
@@ -49,7 +50,10 @@ String str;
         vBox.getChildren().add(compress);
         vBox.getChildren().add(s1);
         vBox.getChildren().add(s2);
-        layout.getChildren().add(vBox);
+        vBox.getChildren().add(graph);
+
+        layout.getChildren().add(vBox); 
+        
 
 
         Scene scene = new Scene(layout, 400, 400);
@@ -137,6 +141,28 @@ String str;
 
         }
         ));
+        graph.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                try {
+                    StringBuilder s1;
+                    s1 = lisa(locationTextField.getText());
+                    String s = s1.toString();
+
+                    writeDotSourceToFile(s);
+                    String command = "dot -Tpng /Users/ayahassan/Desktop/demo5/dotsource.dot -o /Users/ayahassan/Desktop/demo5/dotsource.png";
+                    Process proc = Runtime.getRuntime().exec(command);
+                    Thread.sleep(3000);
+
+
+
+                    graph_display();
+
+                } catch (Exception er1) {
+                    er1.printStackTrace();
+
+                }
+            }
+        });
         primaryStage.show();
     }
 //     public  void consistency_display(boolean s) {
