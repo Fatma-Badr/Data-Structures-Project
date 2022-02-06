@@ -223,6 +223,36 @@ String str;
         window.showAndWait();
 
     }
+         public  void graph_display() throws IOException {
+
+         Stage window = new Stage();
+         window.initModality(Modality.APPLICATION_MODAL);
+         window.setTitle("Graph");
+         Image image = new Image(new FileInputStream("/Users/ayahassan/Desktop/demo5/dotsource.png"));
+
+         //Setting the image view
+         ImageView imageView = new ImageView(image);
+
+         //Setting the position of the image
+         imageView.setX(50);
+         imageView.setY(25);
+
+         //setting the fit height and width of the image view
+         imageView.setFitHeight(455);
+         imageView.setFitWidth(500);
+
+         //Setting the preserve ratio of the image view
+         imageView.setPreserveRatio(true);
+
+
+
+         Group root = new Group(imageView);
+         Scene scene = new Scene(root, 600, 500);
+         window.setScene(scene);
+
+         window.show();
+
+     }
     public  void json_display(String s) {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
