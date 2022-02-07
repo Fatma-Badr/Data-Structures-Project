@@ -654,68 +654,132 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
 
         return t;
     }
-        public static String covertXML_to_JSON(String n) {
-        if(!detection(n))
-         return "In-valid XML file";
-        String str = xmls(n);
-        xml_tree t = new xml_tree();
-        node no = t.convert_to_tree(str);
+    public static String xtoj(String p) {
         StringBuilder r = new StringBuilder();
-        r.append("{");
-        r.append("\n");
-        Stack<String> st = new Stack<String>();
-        st.push(" ");
-
-        XML_to_JSON(no, st, r);
+        String s = xmls(p);
+        xml_tree t = new xml_tree();
+        node root = t.convert_to_tree(s);
+        r.append("{ \n");
+//        r.append(root.node_name + ": {" + "\n");
+        json(root, r, true, false, root.get_children().size(), 0);
+//        r.append("}" + "\n");
         r.append("}");
-        r.append("\n");
         return r.toString();
-
     }
 
-    public static void XML_to_JSON(node n, Stack st, StringBuilder k) {
-        if (isArray(n)) {
-            k.append(st.peek() + " " + "\"" + n.get_node_name() + "\":");
-        } else {
-            k.append(st.peek() + "\"" + n.get_node_name() + "\":");
-        }
-        if (!(n.get_value() == null || n.get_value() == "")) {
-            if (isNumeric(n.get_value()) == -1) {
+    public static StringBuilder json(node n, StringBuilder r, boolean f, boolean more, int v, int k) {
+        boolean h = isArray(n);
 
-                k.append(" \"" + n.get_value() + "\",");
-                k.append("\n");
+        if (n.get_children().size() != 0) {
+
+            if (n.get_children().size() == 1) {
+                if (!f) {
+                    r.append("\"" + n.get_node_name() + "\":{\n");
+                }
+            }
+            if (h) {
+                r.append("\"" + n.get_node_name() + "\":{\n");
+                r.append("\"" + n.get_children().get(0).get_node_name() + "\" : [\n");
+            }
+            if (!f && !h && n.get_children().size() > 1) {
+                r.append("\"" + n.get_node_name() + "\":{\n");
+            }
+//            if(!f &&n.get_children().size()>1 && v>0)r.append("\"" + n.get_node_name() + "\":{\n");
+            int j = 0;
+            for (j = 0; j < n.get_children().size(); j++) {
+                if (h) {
+                    if (n.get_children().get(j).get_children().size() != 0) {
+                        r.append("{\n");
+                    }
+                }
+
+                boolean b = isArray(n);
+                int m = n.get_children().size();
+                if (j == n.get_children().size() - 1) {
+                    more = false;
+                } else {
+                    more = true;
+                }
+//                if(h && (n.get_children().indexOf(n.get_children().get(j))<n.get_children().size()-1) &&(j==n.get_children().size()-1 ))more=true;
+                json(n.get_children().get(j), r, b, more, m, j);
+                if (h) {
+                    if (n.get_children().get(j).get_children().size() != 0) {
+                        r.append(("}"));
+                        if (more) {
+                            r.append(",\n");
+                        } else {
+                            r.append("\n");
+                        }
+                    }
+                }
+            }
+//            if(!f &&n.get_children().size()>1 && v>0){
+//             r.append("},\n");   
+//            }
+            if (!f && !h && n.get_children().size() > 1) {
+                if (k <= v - 2) {
+                    more = true;
+                }
+                if (k == 0) {
+                    more = false;
+                }
+                r.append("}");
+                if (more) {
+                    r.append(",\n");
+                } else {
+                    r.append("\n");
+                }
+            }
+            if (n.get_children().size() == 1) {
+                if (k <= v - 2) {
+                    more = true;
+                }
+                if (k == 0) {
+                    more = false;
+                }
+//                if(n.get_node_name().equals("followers")) more=false;
+                if (!f) {
+                    r.append("}");
+                    if (more) {
+                        r.append(",\n");
+                    } else {
+                        r.append("\n");
+                    }
+                }
+            }
+
+            if (k <= v - 2) {
+                more = true;
+            }
+            if (k == 0) {
+                more = false;
+            }
+            if (h) {
+                r.append("]\n");
+                r.append("}");
+                if (more) {
+                    r.append(",\n");
+                } else {
+                    r.append("\n");
+                }
+            }
+        } else {
+            if (!f) {
+                r.append("\"" + n.get_node_name() + "\":");
+            }
+            if (isNumeric(n.get_value()) == -1) {
+                r.append("\"" + n.get_value() + "\" ");
             } else {
-                k.append(isNumeric(n.get_value()) + ",");
-                k.append("\n");
+                r.append(isNumeric(n.get_value()));
+            }
+            if (more) {
+                r.append(",\n");
+            } else {
+                r.append("\n");
             }
         }
-        if (isArray(n)) {
-            k.append("[");
-            k.append("\n");
-            k.append(st.peek() + " {");
-            k.append("\n");
 
-        } else if (n.get_children().size() > 0) {
-            k.append("{");
-            k.append("\n");
-        }
-
-        st.push(st.peek() + " ");
-        for (int i = 0; i < n.get_children().size(); i++) {
-
-            XML_to_JSON(n.get_children().get(i), st, k);
-
-        }
-        if (isArray(n)) {
-            k.append(st.peek() + " ]");
-            k.append("\n");
-            k.append(st.peek() + "}");
-            k.append("\n");
-        } else if (n.get_children().size() > 0) {
-            k.append(st.peek() + "}");
-        }
-        st.pop();
-
+        return r;
     }
 
     public static boolean isArray(node n) {
