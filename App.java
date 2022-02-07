@@ -654,7 +654,9 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
 
         return t;
     }
-    public static String xtoj(String p) {
+    public static String covertXML_to_JSON(String p) {
+        if(!detection(p))
+            return "In-valid XML file";
         StringBuilder r = new StringBuilder();
         String s = xmls(p);
         xml_tree t = new xml_tree();
