@@ -329,6 +329,91 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         }
         return s;
     }
+    
+    public StringBuilder lisa(String path) {
+        StringBuilder sb = new StringBuilder("");  
+        sb.append("digraph G {\n");
+        graph g = new graph();
+        g.conv_to_mat(path);
+        g.create_list(path);
+        Graph_Node[] adj = g.graph_list();
+         for (Graph_Node adjmat1 : adj) {
+            for (int i = 0; i < adjmat1.follow.size(); i++) {
+                sb.append(adjmat1.name).append("->").append(adjmat1.follow.get(i)).append(";");
+            }
+        }
+        sb.append("\n}");
+        return sb;
+    }
+
+    class Graph_Node {
+
+        String name;
+        ArrayList<String> follow = new ArrayList<String>();
+    }
+
+    class graph {
+
+        private Graph_Node adjmat[];
+
+        public void conv_to_mat(String path) {
+            xml_tree t = new xml_tree();
+            node root = t.convert_to_tree(compress(path));
+            this.adjmat = new Graph_Node[root.children.size()];
+            for (int i = 0; i < root.children.size(); i++) {
+                for (int j = 0; j < ((root.children.get(i)).children).size(); j++) {
+                    if (root.children.get(i).children.get(j).node_name.compareTo("id") == 0) {
+                        adjmat[i] = new Graph_Node();
+                        adjmat[i].name = root.children.get(i).children.get(j).value;
+
+                    }
+
+                }
+            }
+        }
+
+        public void create_list(String path) {
+            xml_tree t = new xml_tree();
+            node root = t.convert_to_tree(compress(path));//compress
+            String id = "";
+            for (int i = 0; i < root.children.size(); i++) {
+                for (int j = 0; j < ((root.children.get(i)).children).size(); j++) {
+                    if (root.children.get(i).children.get(j).node_name.compareTo("id") == 0) {
+                        id = root.children.get(i).children.get(j).value;
+                    }
+                    if (root.children.get(i).children.get(j).node_name.compareTo("followers") == 0) {
+                        for (int k = 0; k < root.children.get(i).children.get(j).children.size(); k++) {
+                            node temp = root.children.get(i).children.get(j).children.get(k);
+                            for (int n = 0; n < adjmat.length; n++) {
+                                if (adjmat[n].name != null) {
+                                    if (((adjmat[n].name).compareTo(temp.children.get(0).value) == 0)) {
+                                        adjmat[n].follow.add(id);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        public Graph_Node[] graph_list() {
+            return adjmat;
+        }
+
+        public void print_all() {
+            for (Graph_Node adjmat1 : adjmat) {
+                System.out.print(adjmat1.name + ": ");
+                for (int i = 0; i < adjmat1.follow.size(); i++) {
+                    System.out.print(adjmat1.follow.get(i) + " ");
+                }
+                System.out.println();
+            }
+        }
+
+    }
 
     public static String formating(String path) {
         if(!detection(path))
