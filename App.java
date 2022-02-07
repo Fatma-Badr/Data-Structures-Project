@@ -783,11 +783,16 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
     }
 
     public static boolean isArray(node n) {
-        boolean v = false;
-        for (int i = 0; i < n.get_children().size() - 1; i++) {
-            String s = n.get_children().get(i).get_value();
-            if (!(s == null || s == "")) {
-                v = true;
+        boolean v = true;
+        System.out.println("-----");
+        if (n.get_children().size() <= 1) {
+            return false;
+        }
+        String k = n.get_children().get(0).get_node_name();
+        for (int i = 0; i < n.get_children().size(); i++) {
+            String s = n.get_children().get(i).get_node_name();
+            if (!s.equalsIgnoreCase(k)) {
+                v = false;
                 break;
             }
         }
