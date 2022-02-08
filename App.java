@@ -663,7 +663,7 @@ public static StringBuilder format(node r, String space, StringBuilder s) {
         node root = t.convert_to_tree(s);
         r.append("{ \n");
 //        r.append(root.node_name + ": {" + "\n");
-        json(root, r, true, false, root.get_children().size(), 0);
+        json(root, r, isArray(root), false, root.get_children().size(), 0);
 //        r.append("}" + "\n");
         r.append("}");
         return r.toString();
